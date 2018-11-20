@@ -31,6 +31,7 @@ namespace azuretestapp.Controllers
         [HttpGet]
         public List<APOD> GetAllAPOD()
         {
+            _logger.LogInformation("Inside GetAllAPOD method at controller APODController");
             return _mongoDBRepository.GetAPODs(AppSetting.Database_Collection);             
         }
 

@@ -18,6 +18,7 @@
         "DB_PORT": "27017",
         "DB_COLLECTION": "APOD",
         "DB_HOST": "localhost",
+        "LOGDIR": "D:\\Projects\\azure\\logs\\",
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
