@@ -1,0 +1,25 @@
+{
+  "name": "azuretestappserver",
+  "version": "1.0.0",
+   "author": "Divyesh Vadhwana",
+  "dependencies": {
+    "express": "^4.16.3",
+    "react": "^15.4.2",
+    "react-addons-css-transition-group": "^15.6.2",
+    "react-dom": "^15.4.2"
+  },
+  "devDependencies": {
+    "ava": "^0.20.0",
+    "proxyquire": "^1.8.0",
+    "react-scripts": "1.0.7"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "PORT=8080 react-scripts start",
+    "build": "react-scripts build"
+  },
+  "engines": {
+    "node": ">=4.3.2"
+  },
+  "proxy": "http://localhost:5000"
+}

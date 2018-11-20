@@ -4,3 +4,8 @@
 
 /azuretestapp/obj
 /.vs/azuretestapp/v15
+/.vs/config/applicationhost.config
+/azuretestapp/azuretestapp.csproj.user
+/azuretestapp/bin/*
+/xunittestforazure/bin/*
+/xunittestforazure/obj/*
