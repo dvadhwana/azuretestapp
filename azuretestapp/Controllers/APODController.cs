@@ -9,9 +9,11 @@ using azuretestapp.Service;
 using Microsoft.Extensions.Logging;
 using azuretestapp.DataAccess;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Cors;
 
 namespace azuretestapp.Controllers
 {
+    [EnableCors("AllowAll")]
     [Route("api/[controller]")]
     [ApiController]
     public class APODController : ControllerBase
@@ -37,7 +39,7 @@ namespace azuretestapp.Controllers
 
         // GET: api/APOD/5
         [HttpGet("GetAPODByDate")]
-        public APOD Get([FromQuery] DateTime APODDate)
+        public List<APOD> Get([FromQuery] DateTime APODDate)
         {
             var APODObject = _mongoDBRepository.FindAPODFromDate(AppSetting.Database_Collection, APODDate);
             if (APODObject == null)
@@ -49,7 +51,9 @@ namespace azuretestapp.Controllers
                     APODObject = APODList.APODS[0];
                 }
             }
-            return APODObject;
+            var listapod = new List<APOD>();
+            listapod.Add(APODObject);
+            return listapod;
         }
 
     }

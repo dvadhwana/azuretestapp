@@ -58,6 +58,7 @@ namespace azuretestapp
             var serviceProvider = BuildLogDI(services);
             services.AddTransient(s => new MongoDBRepository(serviceProvider.GetRequiredService<ILogger<MongoDBRepository>>()));
             services.AddTransient(s => new APODService(serviceProvider.GetRequiredService<ILogger<APODService>>()));
+            services.AddCors(o => o.AddPolicy("AllowAll", builder => { builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin(); }));
                 
         }
 
