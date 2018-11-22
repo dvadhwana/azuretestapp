@@ -15,5 +15,5 @@ WORKDIR /app
 COPY azuretestappserver .
 COPY --from=build /build ./build
 RUN npm install
-
+EXPOSE 5000
 CMD [ "npm", "start" ]

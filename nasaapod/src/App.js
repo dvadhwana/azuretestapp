@@ -17,7 +17,7 @@ class App extends Component {
     this.state = {
       items: [],
       API_URL: "https://localhost:44326/",
-      isLoaded: false,
+      isLoaded: true,
       apodDate: "2018-11-21",
     }
   }

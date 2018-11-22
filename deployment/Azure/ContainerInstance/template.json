@@ -1,0 +1,150 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "containerGroupName": {
+        "type": "string",
+        "defaultValue": "NasaAPODCG",
+        "metadata": {
+          "description": "Container Group for Nasa Astrology Photo Of The Day"
+        }
+      }
+    },
+    "variables": {
+      "container1name": "azuretestappapi",
+      "container1image": "dvadhwana/azuretestappapi:v001",
+      "container2name": "azuretestappapiui",
+      "container2image": "dvadhwana/azuretestappui:v001",
+      "container3name": "mongo-db",
+      "container3image": "mongo:3.4"      
+    },
+    "resources": [
+      {
+        "name": "[parameters('containerGroupName')]",
+        "type": "Microsoft.ContainerInstance/containerGroups",
+        "apiVersion": "2018-04-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "containers": [
+            {
+                "name": "[variables('container3name')]",
+                "properties": {
+                  "image": "[variables('container3image')]",
+                  "resources": {
+                    "requests": {
+                      "cpu": 1,
+                      "memoryInGb": 1.5
+                    }
+                  }
+                }
+            },
+            {
+              "name": "[variables('container1name')]",
+              "properties": {
+                "image": "[variables('container1image')]",
+                "resources": {
+                  "requests": {
+                    "cpu": 1,
+                    "memoryInGb": 1.5
+                  }
+                },
+                "ports": [
+                  {
+                    "port": 80
+                  }
+                ],
+                "environmentVariables": [
+                    {
+                        "name": "DB_NAME",
+                        "value": "AzureTestDB"
+                    },
+                    {
+                        "name": "DB_PORT",
+                        "value": "27017"
+                    },
+                    {
+                        "name": "DB_COLLECTION",
+                        "value": "APOD"
+                    },
+                    {
+                        "name": "DB_HOST",
+                        "value": "localhost"
+                    },
+                    {
+                        "name": "LOGDIR",
+                        "value": "/mnt/applog/"
+                    }
+                ],
+                "volumeMounts": [
+                    {
+                      "name": "applog",
+                      "mountPath": "/mnt/applog/"
+                    }
+                  ]
+              }
+            },
+            {
+              "name": "[variables('container2name')]",
+              "properties": {
+                "image": "[variables('container2image')]",
+                "resources": {
+                  "requests": {
+                    "cpu": 1,
+                    "memoryInGb": 1.5
+                  }
+                },
+                "ports": [
+                    {
+                      "port": 5000
+                    }
+                  ],
+                "environmentVariables": [
+                    {
+                        "name": "API_URL",
+                        "value": "http://azuretestappapod.eastus.azurecontainer.io/"
+                    }                    
+                  ]
+              }
+            }
+          ],
+          "osType": "Linux",
+          "volumes": [{
+            "name": "applog",
+            "azureFile": {
+              "shareName": "apodshare",
+              "storageAccountName": "nasaapodstorage",
+              "storageAccountKey": "yLCeeC8eJY/K9DKgbUbX0ukwMcV5Yu/RkEeZKTik4iYpbLg3Wbhcfp8a18sevcY+ULRq9hWr8VgLHsJELqUbFw=="
+            }
+          },
+          {
+            "name": "mongodata",
+            "azureFile": {
+              "shareName": "mongoshare",
+              "storageAccountName": "nasaapodstorage",
+              "storageAccountKey": "yLCeeC8eJY/K9DKgbUbX0ukwMcV5Yu/RkEeZKTik4iYpbLg3Wbhcfp8a18sevcY+ULRq9hWr8VgLHsJELqUbFw=="
+            }
+          }],
+          "ipAddress": {
+            "type": "Public",
+            "dnsNameLabel": "azuretestappapod",
+            "ports": [
+              {
+                "protocol": "tcp",
+                "port": "80"
+              },
+              {
+                  "protocol": "tcp",
+                  "port": "5000"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "containerIPv4Address": {
+        "type": "string",
+        "value": "[reference(resourceId('Microsoft.ContainerInstance/containerGroups/', parameters('containerGroupName'))).ipAddress.ip]"
+      }
+    }
+  }

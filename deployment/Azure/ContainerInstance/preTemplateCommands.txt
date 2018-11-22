@@ -1,0 +1,14 @@
+--Create storage account
+az storage account create --resource-group divyesh-rg-storage --name nasaapodstorage --location ea
+stus --sku Standard_LRS
+
+--create fileshare for apod application in storage
+az storage share create --name apodshare --account-name nasaapodstorage
+
+--create fileshare for mongodb in storage
+az storage share create --name mongoshare --account-name nasaapodstorage
+
+--Get the storage account access key
+az storage account keys list --resource-group divyesh-rg-storage --account-name nasaapodstorage --
+query "[0].value" --output tsv
+
