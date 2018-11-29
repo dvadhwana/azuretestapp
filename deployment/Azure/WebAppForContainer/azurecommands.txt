@@ -1,0 +1,12 @@
+--Create Service Plan
+az appservice plan create --name webappforcontain
+erplan --resource-group divyesh-rg-webapp --sku S1 --is-linux
+
+
+--Create webapp based on docker compose
+az webapp create --resource-group divyesh-rg-webapp --plan webappforcontainerplan --name azuretestappapod --multicontainer-config-type compose --multicontainer-config-fi
+le app-docker-compose.yml
+
+
+--Other important links
+https://docs.microsoft.com/en-us/azure/app-service/containers/app-service-linux-faq#custom-containers
