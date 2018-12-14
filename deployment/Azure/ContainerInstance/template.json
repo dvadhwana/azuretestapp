@@ -112,16 +112,16 @@
             "name": "applog",
             "azureFile": {
               "shareName": "apodshare",
-              "storageAccountName": "nasaapodstorage",
-              "storageAccountKey": "yLCeeC8eJY/K9DKgbUbX0ukwMcV5Yu/RkEeZKTik4iYpbLg3Wbhcfp8a18sevcY+ULRq9hWr8VgLHsJELqUbFw=="
+              "storageAccountName": "<YourAzureStorageName>",
+              "storageAccountKey": "<YourAzureStorageKey>"
             }
           },
           {
             "name": "mongodata",
             "azureFile": {
               "shareName": "mongoshare",
-              "storageAccountName": "nasaapodstorage",
-              "storageAccountKey": "yLCeeC8eJY/K9DKgbUbX0ukwMcV5Yu/RkEeZKTik4iYpbLg3Wbhcfp8a18sevcY+ULRq9hWr8VgLHsJELqUbFw=="
+              "storageAccountName": "<YourAzureStorageName>",
+              "storageAccountKey": "<YourAzureStorageKey>"
             }
           }],
           "ipAddress": {
