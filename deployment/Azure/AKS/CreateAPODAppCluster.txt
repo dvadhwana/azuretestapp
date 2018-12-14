@@ -1,0 +1,140 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: apoddb-deployment
+spec:  
+  template:
+    metadata:
+      labels:
+        app: apoddb
+    spec:
+      containers:
+      - name: apoddbcontainer
+        image: mongo
+        imagePullPolicy: "Always"		
+        ports:
+        - containerPort: 27017
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: apoddbservice
+  labels:
+    name: apoddbservice
+    type: back-end
+spec:
+  selector:
+   app: apoddb
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 27017   
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: apodapi-deployment
+spec:  
+  template:
+    metadata:
+      labels:
+        app: apodapi
+    spec:
+      containers:
+      - name: apodapicontainer
+        image: dvadhwana/azuretestappapi:v001
+        imagePullPolicy: "Always"		
+        ports:
+        - containerPort: 80
+        env:
+        - name: DB_NAME
+          value: "AzureTestDB"
+        - name: DB_PORT
+          value: "8080"
+        - name: DB_COLLECTION
+          value: "APOD"
+        - name: DB_HOST
+          value: "apoddbservice"
+        - name: LOGDIR
+          value: "/home/"
+        volumeMounts:
+        - name: azurefileshare
+          mountPath: /home      
+      volumes:
+      - name: azurefileshare
+        azureFile:
+          secretName: volume-azurefile-storage-secret
+          shareName: logstorage
+          readOnly: false	
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: apodapiservice
+  labels:
+    name: apodapiservice
+    type: back-end
+spec:
+  selector:
+   app: apodapi
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80   
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: apoddb-ingress
+  annotations:
+    kubernetes.io/ingress.class: addon-http-application-routing
+spec:
+  rules:
+  - host: astrologyphotooftheday.fca9e1cbbf02461ebff6.eastus.aksapp.io
+    http:
+      paths:
+      - backend:
+          serviceName: apodapiservice
+          servicePort: 80
+        path: /api
+      - backend:
+          serviceName: apoduiservice
+          servicePort: 80
+        path: /		
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: apodui-deployment
+spec:  
+  template:
+    metadata:
+      labels:
+        app: apodui
+    spec:
+      containers:
+      - name: apoduicontainer
+        image: dvadhwana/azuretestappui:v001
+        imagePullPolicy: "Always"		
+        ports:
+        - containerPort: 5000
+        env:
+        - name: API_URL
+          value: "http://astrologyphotooftheday.fca9e1cbbf02461ebff6.eastus.aksapp.io/"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: apoduiservice
+  labels:
+    name: apoduiservice
+    type: front-end
+spec:
+  selector:
+   app: apodui
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 5000
+  type: ClusterIP  
+---
