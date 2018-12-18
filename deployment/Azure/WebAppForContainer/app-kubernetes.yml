@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: apod
+  labels:
+    name: apod
+spec:
+  containers:
+   - image: mongo:3.4
+     name: mongodb
+   - image: dvadhwana/azuretestappapi:v001
+     name: apod
+     ports:
+     - containerPort: 80
+       name: apod
+     volumeMounts:
+      - name: appservice-storage
+        mountPath: /mnt
+        subPath: /applogs
+  volumes:
+    - name: appservice-storage
+      hostConfig:
+        path: ${WEBAPP_STORAGE_HOME}

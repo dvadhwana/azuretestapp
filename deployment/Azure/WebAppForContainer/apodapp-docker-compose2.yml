@@ -3,25 +3,21 @@ version: '3.3'
 services:
    db:
      image: mongo:3.4
+     ports:
+       - "27017:27017"
      restart: always
-
    apodapi:
      depends_on:
        - db
      image: dvadhwana/azuretestappapi:v001
      ports:
-       - "8081:80"
+       - "80:80"
+     volumes:
+       - ${WEBAPP_STORAGE_HOME}/site/wwwroot:/mnt
      restart: always
      environment:
        DB_HOST: db
        DB_PORT: 27017
        DB_NAME: AzureTestDB
        DB_COLLECTION: APOD
-
-   apodui:
-     image: dvadhwana/azuretestappui:v001
-     ports:
-       - "80:5000"
-     restart: always
-     environment:
-       API_URL: http://azuretestappapod.azurewebsites.net:8081/
+       LOGDIR: /mnt/

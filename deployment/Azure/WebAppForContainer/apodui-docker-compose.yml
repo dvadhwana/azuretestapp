@@ -1,0 +1,10 @@
+version: '3.3'
+
+services:
+   apodui:
+     image: dvadhwana/azuretestappui:v001
+     ports:
+       - "80:5000"
+     restart: always
+     environment:
+       API_URL: https://apodapi.azurewebsites.net/
