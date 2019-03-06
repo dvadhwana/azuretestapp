@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apoddb-deployment
+spec:
+  replicas: {{ .Values.dbReplicaCount }} 
+  selector:
+    matchLabels:
+      app: apoddb 
+  template:
+    metadata:
+      labels:
+        app: apoddb
+    spec:
+      containers:
+      - name: apoddbcontainer
+        image: "{{ .Values.dbimage.repository }}:{{ .Values.dbimage.tag }}"
+        imagePullPolicy: "Always"		
+        ports:
+        - containerPort: 27017
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apodapi-deployment
+spec:
+  replicas: {{ .Values.apiReplicaCount }}
+  selector:
+    matchLabels:
+      app: apodapi
+  template:
+    metadata:
+      labels:
+        app: apodapi
+    spec:
+      containers:
+      - name: apodapicontainer
+        image: "{{ .Values.apiimage.repository }}:{{ .Values.apiimage.tag }}"
+        imagePullPolicy: "Always"		
+        ports:
+        - containerPort: 80
+        env:
+        - name: DB_NAME
+          value: "AzureTestDB"
+        - name: DB_PORT
+          value: "8080"
+        - name: DB_COLLECTION
+          value: "APOD"
+        - name: DB_HOST
+          value: "apoddbservice"
+        - name: LOGDIR
+          value: "/home/"
+        volumeMounts:
+        - name: podshare
+          mountPath: /home      
+      volumes:
+      - name: podshare
+        azureFile:
+          secretName: volume-azurefile-storage-secret
+          shareName: apodlogs
+          readOnly: false	
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: apodui-deployment
+spec:
+  replicas: {{ .Values.uiReplicaCount }}
+  selector:
+    matchLabels:
+      app: apodui
+  template:
+    metadata:
+      labels:
+        app: apodui
+    spec:
+      containers:
+      - name: apoduicontainer
+        image: dvadhwana/azuretestappui:v001
+        imagePullPolicy: "Always"		
+        ports:
+        - containerPort: 5000
+        env:
+        - name: API_URL
+          value: "http://apodapp.39aba37630bc401c93f2.eastus.aksapp.io/"

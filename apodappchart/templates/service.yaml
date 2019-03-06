@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: apoddbservice
+  labels:
+    name: apoddbservice
+    type: back-end
+spec:
+  selector:
+   app: apoddb
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 27017   
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: apodapiservice
+  labels:
+    name: apodapiservice
+    type: back-end
+spec:
+  selector:
+   app: apodapi
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80   
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: apoduiservice
+  labels:
+    name: apoduiservice
+    type: front-end
+spec:
+  selector:
+   app: apodui
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 5000
+  type: ClusterIP  
+---

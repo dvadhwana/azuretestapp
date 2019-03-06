@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: apod-ingress
+  annotations:
+    kubernetes.io/ingress.class: addon-http-application-routing
+spec:
+  rules:
+  - host: apodapp.39aba37630bc401c93f2.eastus.aksapp.io
+    http:
+      paths:
+      - path: /api
+        backend:
+          serviceName: apodapiservice
+          servicePort: 80
+      - path: /swagger
+        backend:
+          serviceName: apodapiservice
+          servicePort: 80
+      - path: /
+        backend:
+          serviceName: apoduiservice
+          servicePort: 80
