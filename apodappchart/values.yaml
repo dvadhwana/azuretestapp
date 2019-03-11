@@ -34,6 +34,7 @@ service:
 
 ingress:
   enabled: true
+  hostname: apodapp.39aba37630bc401c93f2.eastus.aksapp.io
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
