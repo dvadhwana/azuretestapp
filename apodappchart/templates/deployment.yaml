@@ -76,10 +76,10 @@ spec:
     spec:
       containers:
       - name: apoduicontainer
-        image: dvadhwana/azuretestappui:v001
+        image: "{{ .Values.uiimage.repository }}:{{ .Values.uiimage.tag }}"
         imagePullPolicy: "Always"		
         ports:
         - containerPort: 5000
         env:
         - name: API_URL
-          value: "http://apodapp.39aba37630bc401c93f2.eastus.aksapp.io/"
+          value: "{{ .Values.uiimage.apiurl }}"
