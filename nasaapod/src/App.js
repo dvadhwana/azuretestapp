@@ -16,7 +16,7 @@ class App extends Component {
     super(props);
     this.state = {
       items: [],
-      API_URL: "https://localhost:44326/",
+      API_URL: "",
       isLoaded: true,
       apodDate: "2018-11-21",
     }
@@ -29,20 +29,21 @@ class App extends Component {
         this.setState({API_URL: data.API_URL});
       })
       .catch(function () {
-        this.setState({ isLoaded: false });
+        this.setState({ isLoaded: true });
+        this.setState({API_URL: "http://localhost:53905/"});
         console.log("Cant reach server");
       }.bind(this));
   }
   componentDidMount(){
-    fetch(this.state.API_URL + "api/APOD",{ async: true})
-      .then(res => res.json())
-      .then(data => {
-        this.setState({items: data, isLoaded:true});
-      })
-      .catch(function () {
-        this.setState({ isLoaded: false });
-        console.log("Can't reach server");
-      }.bind(this));
+    // fetch(this.state.API_URL + "api/APOD",{ async: true})
+    //   .then(res => res.json())
+    //   .then(data => {
+    //     this.setState({items: data, isLoaded:true});
+    //   })
+    //   .catch(function () {
+    //     this.setState({ isLoaded: false });
+    //     console.log("Can't reach server");
+    //   }.bind(this));
   }
 
   onGetAPODRequest = () => {
@@ -88,15 +89,42 @@ class App extends Component {
     if(!isLoaded) {
       return (
         <div className="App">
-          <header className="App-header">
-            {/* <i className="App-title"> <img src={loading} alt="Nasa" style={{ marginBottom: "5px" }} /></i> */}
-            <Segment>
-              <Dimmer active>
-                <Loader size='massive'>Loading</Loader>
-              </Dimmer>
-            </Segment>            
-          </header>
-        </div>
+          <div className="Loading">
+            <header className="App-header">
+              {/* <i className="App-title"> <img src={loading} alt="Nasa" style={{ marginBottom: "5px" }} /></i> */}
+              <Segment>
+                <Dimmer active>
+                  <Loader size='massive'>Loading</Loader>
+                </Dimmer>
+              </Segment>            
+            </header>
+          </div>
+          <div style={{display: 'flex', alignContent:'center'}}>            
+              <table style={{width: '100%'}}>
+                <tr>
+                  <td align="left">                  
+                    <TextField
+                      id="mydate"
+                      style={{margin: '15px', marginLeft:'25px'}}
+                      type="text" 
+                      label="Disabled"
+                      placeholder="YYYY-MM-DD"                    
+                      onChange={this.updateapodDate}
+                      value={this.state.apodDate}
+                      />  
+                      <Button size="small" color="default" onClick={this.onGetAPODRequest}>
+                      Get Astrology Photo from Nasa
+                      </Button>         
+                    </td>
+                    <td aligh="right">
+                      <Button size="small" color="default" onClick={this.onGetAllAPODRequest}>
+                      Show All Available Records in DB
+                      </Button>          
+                    </td>
+                  </tr>
+                </table>
+            </div> 
+          </div>       
       );
     }
     else
