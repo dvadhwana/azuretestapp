@@ -148,7 +148,7 @@ class App extends Component {
                     value={this.state.apodDate}
                     />  
                     <Button size="small" color="default" onClick={this.onGetAPODRequest}>
-                    Get Astrology Photo from Nasa
+                    Get Astrology Photo Of The Day
                     </Button>         
                   </td>
                   <td aligh="right">
