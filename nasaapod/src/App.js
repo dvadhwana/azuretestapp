@@ -153,7 +153,7 @@ class App extends Component {
                   </td>
                   <td aligh="right">
                     <Button size="small" color="default" onClick={this.onGetAllAPODRequest}>
-                    Show Available Records From DB
+                    Show Available Photos From DB
                     {/* Show All Available Records in DB */}
                     </Button>          
                   </td>
